@@ -15,7 +15,7 @@ Building products that think · Construyendo productos que piensan
 <!-- BADGES -->
 [![Portfolio](https://img.shields.io/badge/hibrusi.com-17184B?style=for-the-badge&logo=vercel&logoColor=D8E63C)](https://hibrusi.com)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/TUUSUARIO)
-[![Email](https://img.shields.io/badge/Email-D8E63C?style=for-the-badge&logo=gmail&logoColor=17184B)](mailto:hola@hibrusi.com)
+[![Email](https://img.shields.io/badge/Email-D8E63C?style=for-the-badge&logo=gmail&logoColor=17184B)](mailto:hibrusi-dev@gmail.com)
 
 </div>
 
@@ -93,18 +93,20 @@ Freelance web studio — portfolio & service landing page. SEO optimized, dark/l
 <tr>
 <td width="50%">
 
-### 🧬 Biotech E-Commerce
-Corporate site + e-commerce for a biotech brand. Includes interactive body diagnostic tool, cart system and RGPD cookie banner.
+### 🎟️ Streetwear Raffle System
+Password-protected raffle platform for a streetwear brand. Custom CRT/analog aesthetic, admin panel, and full entry management. Built as a portfolio outreach piece.
 
-`Next.js 14` `TypeScript` `Tailwind`
+`PocketBase` `Vanilla JS` `CSS` `CRT Aesthetic`
 
 </td>
 <td width="50%">
 
-### 🗺️ WorldSim 2077
-Economic simulation platform with a 3D globe, real-time data and AI-generated geopolitical events powered by Gemini.
+### 🎭 TTP Entertainment
+Corporate website for an entertainment agency. Mobile-first, Safari/iPhone optimized, with booking flow and brand identity.
 
-`FastAPI` `React` `Three.js` `Google Gemini`
+`HTML/CSS/JS` `SEO` `Cross-browser`
+
+[→ ttpentertainment.es](https://ttpentertainment.es)
 
 </td>
 </tr>
