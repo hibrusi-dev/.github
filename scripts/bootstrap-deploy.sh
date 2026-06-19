@@ -46,19 +46,19 @@ for line in "${REPOS[@]}"; do
 
   for ex in $EXCLUDES; do
     if [[ "$name" == "$ex" ]]; then
-      echo "·  $name (excluido)"; ((skipped++)); continue 2
+      echo "·  $name (excluido)"; skipped=$((skipped+1)); continue 2
     fi
   done
 
   if gh api "repos/$ORG/$name/contents/$WF_PATH?ref=$branch" >/dev/null 2>&1; then
-    echo "=  $name (ya tiene deploy.yml)"; ((skipped++)); continue
+    echo "=  $name (ya tiene deploy.yml)"; skipped=$((skipped+1)); continue
   fi
 
   gh api -X PUT "repos/$ORG/$name/contents/$WF_PATH" \
     -f message="ci: add deploy caller workflow (hibrusi-dev CI/CD)" \
     -f content="$CONTENT_B64" \
     -f branch="$branch" >/dev/null \
-    && { echo "+  $name (caller añadido a $branch)"; ((added++)); }
+    && { echo "+  $name (caller añadido a $branch)"; added=$((added+1)); }
 done
 
 echo "==> Hecho. Añadidos: $added · Saltados: $skipped"
