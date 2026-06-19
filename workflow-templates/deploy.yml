@@ -1,13 +1,23 @@
 # Caller mínimo: toda la lógica está en hibrusi-dev/.github.
 # Despliega por SSH + docker compose en cada push a la rama por defecto.
+# El push usa el VPS de la variable DEPLOY_TARGET del repo (o vps1).
+# Al lanzarlo a mano puedes elegir vps1 o vps2.
 name: Deploy
 
 on:
   push:
     branches: [ $default-branch ]
   workflow_dispatch:
+    inputs:
+      target:
+        description: "¿A qué VPS desplegar?"
+        type: choice
+        options: [ vps1, vps2 ]
+        default: vps1
 
 jobs:
   deploy:
     uses: hibrusi-dev/.github/.github/workflows/deploy-reusable.yml@main
+    with:
+      target: ${{ inputs.target }}
     secrets: inherit
