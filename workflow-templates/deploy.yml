@@ -1,0 +1,13 @@
+# Caller mínimo: toda la lógica está en hibrusi-dev/.github.
+# Despliega por SSH + docker compose en cada push a la rama por defecto.
+name: Deploy
+
+on:
+  push:
+    branches: [ $default-branch ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    uses: hibrusi-dev/.github/.github/workflows/deploy-reusable.yml@main
+    secrets: inherit

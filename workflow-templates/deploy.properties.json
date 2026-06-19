@@ -1,0 +1,6 @@
+{
+  "name": "Deploy a VPS (Docker)",
+  "description": "Despliega por SSH al VPS con docker compose en cada push. Usa el reusable workflow central de hibrusi-dev.",
+  "iconName": "octicon rocket",
+  "categories": ["deployment", "Docker"]
+}

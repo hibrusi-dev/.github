@@ -1,0 +1,66 @@
+# =====================================================================
+# Reusable workflow de despliegue — hibrusi-dev
+# La lógica de CD vive AQUÍ una sola vez. Cada repo la invoca con un
+# caller mínimo (ver workflow-templates/deploy.yml).
+# ---------------------------------------------------------------------
+# Despliega por SSH al VPS y reconstruye con docker compose.
+# La ruta en el servidor se resuelve, por orden:
+#   1) input deploy_path (si el caller lo pasa)
+#   2) variable de repo  DEPLOY_PATH
+#   3) <DEPLOY_BASE>/<nombre-del-repo>   (DEPLOY_BASE por defecto /root)
+#
+# Configuración (una sola vez, a nivel de ORGANIZACIÓN):
+#   Secrets:  DEPLOY_HOST, DEPLOY_USER, DEPLOY_SSH_KEY, DEPLOY_PORT(opc)
+#   Vars:     DEPLOY_BASE (p. ej. /root),  DEPLOY_ENABLED = true
+# El job solo se ejecuta si DEPLOY_ENABLED == 'true' (interruptor global;
+# cualquier repo puede desactivarlo con su propia variable a 'false').
+# =====================================================================
+name: Deploy (reusable)
+
+on:
+  workflow_call:
+    inputs:
+      deploy_path:
+        description: "Ruta del repo en el servidor (opcional)."
+        type: string
+        required: false
+        default: ""
+      branch:
+        description: "Rama a desplegar."
+        type: string
+        required: false
+        default: "main"
+
+jobs:
+  deploy:
+    name: Desplegar en VPS
+    runs-on: ubuntu-latest
+    if: ${{ vars.DEPLOY_ENABLED == 'true' }}
+    concurrency:
+      group: deploy-${{ github.repository }}
+      cancel-in-progress: false
+    steps:
+      - name: Desplegar por SSH
+        uses: appleboy/ssh-action@v1.2.2
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          port: ${{ secrets.DEPLOY_PORT || 22 }}
+          envs: REPO_NAME,IN_PATH,VAR_PATH,IN_BASE,IN_BRANCH
+          script: |
+            set -euo pipefail
+            DPATH="${IN_PATH:-${VAR_PATH:-${IN_BASE:-/root}/$REPO_NAME}}"
+            echo "==> Desplegando $REPO_NAME en $DPATH (rama $IN_BRANCH)"
+            cd "$DPATH"
+            git fetch --all --prune
+            git reset --hard "origin/$IN_BRANCH"
+            docker compose up -d --build --remove-orphans
+            docker image prune -f
+            docker compose ps
+        env:
+          REPO_NAME: ${{ github.event.repository.name }}
+          IN_PATH: ${{ inputs.deploy_path }}
+          VAR_PATH: ${{ vars.DEPLOY_PATH }}
+          IN_BASE: ${{ vars.DEPLOY_BASE }}
+          IN_BRANCH: ${{ inputs.branch }}
